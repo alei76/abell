@@ -5,4 +5,12 @@ package abell.engine;
  * Date: 13-11-12
  */
 public interface ContentStore {
+
+    void iterate(Handler handler);
+
+    interface Handler{
+
+        void handle(Vector item);
+
+    }
 }
