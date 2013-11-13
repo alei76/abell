@@ -10,7 +10,8 @@ public interface ContentStore {
 
     interface Handler{
 
-        void handle(Vector item);
+        void handle(Content item);
 
     }
+
 }
