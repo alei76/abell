@@ -2,6 +2,7 @@ package abell.engine;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Author: GuoYu
@@ -19,9 +20,11 @@ public interface Recommender {
 
     void attachContent(long uid, CharSequence chars);
 
-    public interface Fetcher{
+    public interface Fetcher {
 
         int count();
+
+        List<Long> list(int offset, int count);
 
     }
 
