@@ -10,9 +10,11 @@ import java.util.List;
  */
 public interface Recommender {
 
-    Fetcher fetchForUser(long uid);
+    Fetcher fetch(long uid);
 
     void attachUser(long uid);
+    
+    void attachRelationship(long uid1, long uid2);
 
     void attachContent(long uid, InputStream inputStream);
 

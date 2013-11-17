@@ -5,4 +5,5 @@ package abell.engine;
  * Date: 13-11-13
  */
 public interface Content extends IdentifiedVector {
+	
 }

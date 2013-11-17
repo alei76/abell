@@ -12,13 +12,18 @@ import java.net.URL;
 public class TTSRecommender implements Recommender {
 
     @Override
-    public Fetcher fetchForUser(long uid) {
+    public Fetcher fetch(long uid) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void attachUser(long uid) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+    
+    @Override
+    public void attachRelationship(long uid1, long uid2) {
+    	
     }
 
     @Override
@@ -35,4 +40,5 @@ public class TTSRecommender implements Recommender {
     public void attachContent(long uid, CharSequence chars) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+    
 }

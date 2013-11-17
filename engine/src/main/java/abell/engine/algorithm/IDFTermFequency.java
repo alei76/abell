@@ -10,6 +10,10 @@ import java.util.Map;
  * Date: 13-11-12
  */
 public class IDFTermFequency implements TermFequency {
+	
+	IDFTermFequency() {
+		
+	}
 
     @Override
     public Map<String, Integer> parse(InputStream inStream) {

@@ -6,11 +6,11 @@ package abell.engine;
  */
 public interface MatrixStorage<T extends IdentifiedVector> {
 
-    void iterate(Handler handler);
+    void iterate(Handler<T> handler);
 
-    interface Handler{
+    interface Handler<H extends IdentifiedVector>{
 
-        void handle(T item);
+        void handle(H item);
 
     }
 }
