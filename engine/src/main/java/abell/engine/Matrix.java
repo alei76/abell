@@ -4,7 +4,9 @@ package abell.engine;
  * Author: GuoYu
  * Date: 13-11-13
  */
-public interface MatrixStorage<T extends IdentifiedVector> {
+public interface Matrix<T extends IdentifiedVector> {
+	
+	void attach(T item);
 
     void iterate(Handler<T> handler);
 

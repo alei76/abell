@@ -1,7 +1,7 @@
-package abell.engine.algorithm;
+package abell.engine;
 
-import abell.engine.Recommender;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -10,6 +10,10 @@ import java.net.URL;
  * Date: 13-11-13
  */
 public class TTSRecommender implements Recommender {
+	
+	TTSRecommender() {
+		
+	}
 
     @Override
     public Fetcher fetch(long uid) {
@@ -22,22 +26,22 @@ public class TTSRecommender implements Recommender {
     }
     
     @Override
-    public void attachRelationship(long uid1, long uid2) {
+    public void attachRelationship(long uid1, long uid2, float score) {
     	
     }
 
     @Override
-    public void attachContent(long uid, InputStream inputStream) {
+    public void attachContent(long cid, InputStream inputStream) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void attachContent(long uid, URL url) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void attachContent(long cid, URL url) throws IOException {
+    	attachContent(cid, url.openStream());
     }
 
     @Override
-    public void attachContent(long uid, CharSequence chars) {
+    public void attachContent(long cid, CharSequence chars) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
     
