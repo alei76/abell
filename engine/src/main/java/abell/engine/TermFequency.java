@@ -1,5 +1,6 @@
 package abell.engine;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -9,6 +10,6 @@ import java.util.Map;
  */
 public interface TermFequency {
 
-    Map<String, Integer> parse(InputStream inStream);
+    Map<String, Float> parse(InputStream inStream) throws IOException ;
 
 }
