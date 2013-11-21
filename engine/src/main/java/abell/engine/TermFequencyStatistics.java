@@ -2,8 +2,12 @@ package abell.engine;
 
 public interface TermFequencyStatistics {
 
-	int fequency(CharSequence chars);
-	
-	void log(CharSequence chars);
+    int incr();
+
+    int count();
+
+    int incr(CharSequence chars);
+
+    int count(CharSequence chars);
 	
 }
