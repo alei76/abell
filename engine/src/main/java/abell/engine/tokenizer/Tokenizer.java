@@ -1,13 +1,13 @@
-package abell.engine;
+package abell.engine.tokenizer;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 public interface Tokenizer {
 
 	TokenIterator iterator(CharSequence chars) throws IOException ;
 
-	TokenIterator iterator(InputStream inStream) throws IOException ;
+	TokenIterator iterator(Reader reader) throws IOException ;
 	
 	interface Token {
 		

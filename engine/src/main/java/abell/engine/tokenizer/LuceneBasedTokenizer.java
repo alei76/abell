@@ -1,4 +1,4 @@
-package abell.engine.algorithm;
+package abell.engine.tokenizer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,15 +12,13 @@ import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-import abell.engine.Tokenizer;
-
 public class LuceneBasedTokenizer implements Tokenizer {
 	
 	private Analyzer analyzer;
 	
 	private String fieldName = "";
 	
-	LuceneBasedTokenizer() {
+	public LuceneBasedTokenizer() {
 		analyzer = new SmartChineseAnalyzer(Version.LUCENE_45);
 	}
 
@@ -31,8 +29,7 @@ public class LuceneBasedTokenizer implements Tokenizer {
 	}
 
 	@Override
-	public TokenIterator iterator(InputStream inStream) throws IOException {
-		Reader reader = new InputStreamReader(inStream);
+	public TokenIterator iterator(Reader reader) throws IOException {
 		TokenStream ts = analyzer.tokenStream(fieldName, reader);
 		return iterator(ts);
 	}
