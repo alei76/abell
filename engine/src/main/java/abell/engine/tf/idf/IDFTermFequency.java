@@ -18,16 +18,16 @@ public class IDFTermFequency implements TermFequency {
 	
 	private Tokenizer tokenizer;
 	
-	private ContextFactory contextFactory;
+	private HandlerFactory handlerFactory;
 	
-	IDFTermFequency(Tokenizer tokenizer, ContextFactory contextFactory) {
+	IDFTermFequency(Tokenizer tokenizer, HandlerFactory handlerFactory) {
 		this.tokenizer = tokenizer;
-		this.contextFactory = contextFactory;
+		this.handlerFactory = handlerFactory;
 	}
 
     @Override
     public Map<String, Float> parse(Reader reader) throws IOException {
-    	Context context = contextFactory.getContext();
+    	Handler context = handlerFactory.getHandler();
     	Hashtable<String, Float> result = new Hashtable<String, Float>();
     	//increate document count;
     	context.increaseDocument();
@@ -43,21 +43,21 @@ public class IDFTermFequency implements TermFequency {
     
     @Override
     public Map<String, Float> parse(CharSequence chars) throws IOException {
-    	Context context = contextFactory.getContext();
+    	Handler handler = handlerFactory.getHandler();
     	Hashtable<String, Float> result = new Hashtable<String, Float>();
     	//increate document count;
-    	context.increaseDocument();
+        handler.increaseDocument();
     	for(TokenIterator i = tokenizer.iterator(chars);
     			i.next();) {
-    		mapping(result, i.token(), context);
+    		mapping(result, i.token(), handler);
     	}
-    	reduce(result, context);
+    	reduce(result, handler);
     	//submit;
-    	context.resolve();
+        handler.resolve();
     	return result;
     }
     
-    private void mapping(Hashtable<String, Float> result, Token token, Context context) {
+    private void mapping(Hashtable<String, Float> result, Token token, Handler context) {
 		String text = token.text();
     	Float feq = result.get(text);
     	if(feq == null) {
@@ -68,13 +68,13 @@ public class IDFTermFequency implements TermFequency {
     	result.put(text, feq);
     }
     
-    private  void reduce(Hashtable<String, Float> result, Context context){
+    private  void reduce(Hashtable<String, Float> result, Handler handler){
     	for(String term : result.keySet()) {
-    		context.increaseTerm(term);
+            handler.increaseTerm(term);
     	}
     	for(Map.Entry<String, Float> entry : result.entrySet()) {
-    		int dc = context.countDocument();
-    		int dw = context.countTerm(entry.getKey());
+    		int dc = handler.countDocument();
+    		int dw = handler.countTerm(entry.getKey());
     		float idf = (float)Math.log((float)dc / (float)dw);
     		entry.setValue(entry.getValue() * idf);
     	}
