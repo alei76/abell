@@ -1,8 +1,7 @@
 package abell.engine;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -17,9 +16,7 @@ public interface Recommender {
     
     void attachRelationship(long uid1, long uid2, float score);
 
-    void attachContent(long cid, InputStream inputStream) throws IOException;
-
-    void attachContent(long cid, URL url) throws IOException;
+    void attachContent(long cid, Reader reader) throws IOException;
 
     void attachContent(long cid, CharSequence chars);
 

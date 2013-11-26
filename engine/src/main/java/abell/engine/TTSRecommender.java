@@ -3,6 +3,7 @@ package abell.engine;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 /**
@@ -31,13 +32,8 @@ public class TTSRecommender implements Recommender {
     }
 
     @Override
-    public void attachContent(long cid, InputStream inputStream) {
+    public void attachContent(long cid, Reader reader) {
         //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void attachContent(long cid, URL url) throws IOException {
-    	attachContent(cid, url.openStream());
     }
 
     @Override
