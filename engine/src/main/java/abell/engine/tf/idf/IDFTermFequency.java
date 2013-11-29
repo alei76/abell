@@ -80,8 +80,11 @@ public class IDFTermFequency implements TermFequency {
     }
 
     private RealVector toVector(TreeMap<Dimension, Double> temp) {
+        if(temp.size() == 0) {
+            return new OpenMapRealVector(0);
+        }
         Dimension maxDimension = temp.lastKey();
-        RealVector vector = new OpenMapRealVector(maxDimension.index);
+        RealVector vector = new OpenMapRealVector(maxDimension.index + 1);
         for(Map.Entry<Dimension, Double> e :temp.entrySet()){
             Dimension dimension = e.getKey();
             double score = e.getValue();
