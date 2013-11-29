@@ -2,10 +2,13 @@ package abell.engine.tf.idf;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import abell.engine.tf.DimensionMapper;
+import org.apache.commons.math.linear.RealVector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +18,41 @@ import abell.engine.tokenizer.LuceneBasedTokenizer;
 public class IDFTermFequencyTest {
 	
 	IDFTermFequency termFequency;
+
+    DimensionMapper mapper = new DimensionMapper() {
+
+        private int seq = 0;
+
+        private HashMap<String, Integer> termToIndex = new HashMap<String, Integer>();
+
+        private HashMap<Integer, String> indexToTerm = new HashMap<Integer, String>();
+
+        @Override
+        public int indexOf(String term) {
+            Integer index = termToIndex.get(term);
+            if(index == null) {
+                index = seq ++ ;
+                termToIndex.put(term, index);
+                indexToTerm.put(index, term);
+            }
+            return index;
+        }
+
+        @Override
+        public int size() {
+            return termToIndex.size();
+        }
+
+        @Override
+        public String termAt(int index) {
+            return indexToTerm.get(index);
+        }
+
+        @Override
+        public Iterator<String> iterator() {
+            return null;
+        }
+    } ;
 	
 	HandlerFactory handlerFactory = new HandlerFactory() {
 
@@ -65,7 +103,8 @@ public class IDFTermFequencyTest {
 
 		@Override
 		public int countTerm(CharSequence chars) {
-			return termCounts.get(chars);
+			Integer count = termCounts.get(chars);
+            return count == null ? 0 : count.intValue();
 		}
 
 		@Override
@@ -84,9 +123,10 @@ public class IDFTermFequencyTest {
 		Iterator<NewsSample> samples = NewsSample.listAll();
 		while(samples.hasNext()){
 			NewsSample sample = samples.next();
-			Map<String, Float> termFequencies = termFequency.parse(sample.getContent());
+			RealVector vector = termFequency.parse(
+                sample.getContent(), mapper);
 			System.out.println(sample.getTitle());
-			System.out.println(termFequencies);
+			System.out.println(vector);
 			System.out.println("");
 		}
 	}
