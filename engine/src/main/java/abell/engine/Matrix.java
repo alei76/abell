@@ -1,18 +1,11 @@
 package abell.engine;
 
+import java.util.List;
+
 /**
  * Author: GuoYu
  * Date: 13-11-13
  */
-public interface Matrix<T extends IdentifiedVector> {
-	
-	void attach(T item);
-
-    void iterate(Handler<T> handler);
-
-    interface Handler<H extends IdentifiedVector>{
-
-        void handle(H item);
-
-    }
+public interface Matrix<V extends Vector> extends List<V> {
+    
 }

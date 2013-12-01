@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import abell.engine.tf.DimensionMapper;
+
+import org.apache.commons.math.linear.OpenMapRealVector;
 import org.apache.commons.math.linear.RealVector;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,13 +123,25 @@ public class IDFTermFequencyTest {
 	@Test
 	public void testParse() throws MalformedURLException, IOException {
 		Iterator<NewsSample> samples = NewsSample.listAll();
+		RealVector prev = null;
 		while(samples.hasNext()){
-			NewsSample sample = samples.next();
+			NewsSample news = samples.next();
 			RealVector vector = termFequency.parse(
-                sample.getContent(), mapper);
-			System.out.println(sample.getTitle());
-			System.out.println(vector);
+				news.getContent(), mapper);
+			int dimension = vector.getDimension();
+			if(dimension == 0) {
+				continue;
+			}
+			if(prev == null) {
+				prev = vector;
+				continue;
+			}
+			OpenMapRealVector sample2 = new OpenMapRealVector(vector.getDimension());
+			sample2.setSubVector(0, prev);
+			System.out.println(news.getTitle());
+			System.out.println(sample2.getDistance(vector));
 			System.out.println("");
+			prev = vector;
 		}
 	}
 }

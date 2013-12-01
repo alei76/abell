@@ -37,7 +37,9 @@ public class IDFTermFequency implements TermFequency {
         handler.increaseDocument();
     	for(TokenIterator i = tokenizer.iterator(reader);
     			i.next();) {
-            addFequency(temp, i.token(), mapper);
+    		String term = i.token().text();
+            addFequency(temp, term, mapper);
+            terms.add(term);
     	}
         reduceByIDF(temp, terms, handler, mapper);
     	//submit;
@@ -52,8 +54,7 @@ public class IDFTermFequency implements TermFequency {
         return parse(new StringReader(src), mapper);
     }
 
-    private void addFequency(TreeMap<Dimension, Double> temp, Token token, DimensionMapper mapper) {
-        String term = token.text();
+    private void addFequency(TreeMap<Dimension, Double> temp, String term, DimensionMapper mapper) {
         int index = mapper.indexOf(term);
         Dimension dimension = new Dimension(index, term);
         Double score = temp.get(dimension);
@@ -68,7 +69,6 @@ public class IDFTermFequency implements TermFequency {
     	for(String term : terms) {
             handler.increaseTerm(term);
     	}
-        Iterator<RealVector.Entry> i;
         for(Map.Entry<Dimension, Double> e : temp.entrySet()) {
             Double score = e.getValue();
             Dimension dimension = e.getKey();
@@ -84,7 +84,7 @@ public class IDFTermFequency implements TermFequency {
             return new OpenMapRealVector(0);
         }
         Dimension maxDimension = temp.lastKey();
-        RealVector vector = new OpenMapRealVector(maxDimension.index + 1);
+        OpenMapRealVector vector = new OpenMapRealVector(maxDimension.index + 1);
         for(Map.Entry<Dimension, Double> e :temp.entrySet()){
             Dimension dimension = e.getKey();
             double score = e.getValue();
