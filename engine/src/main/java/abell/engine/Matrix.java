@@ -2,6 +2,8 @@ package abell.engine;
 
 import java.util.List;
 
+import abell.engine.model.Vector;
+
 /**
  * Author: GuoYu
  * Date: 13-11-13

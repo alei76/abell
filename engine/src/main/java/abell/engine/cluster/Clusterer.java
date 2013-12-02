@@ -2,9 +2,7 @@ package abell.engine.cluster;
 
 import java.util.Collection;
 
-import org.apache.commons.math.linear.RealVector;
-
-import abell.engine.Vector;
+import abell.engine.model.Vector;
 
 public interface Clusterer<V extends Vector> {
 
@@ -12,7 +10,7 @@ public interface Clusterer<V extends Vector> {
 	
 	interface Clustor<I> {
 		
-		RealVector centre();
+		Vector centre();
 		
 		Collection<I> items();
 		

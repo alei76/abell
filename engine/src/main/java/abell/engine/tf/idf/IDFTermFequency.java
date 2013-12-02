@@ -1,17 +1,17 @@
 package abell.engine.tf.idf;
 
+import abell.engine.model.SparseVector;
+import abell.engine.model.Vector;
 import abell.engine.tf.DimensionMapper;
 import abell.engine.tf.TermFequency;
 import abell.engine.tokenizer.Tokenizer;
 import abell.engine.tokenizer.Tokenizer.Token;
 import abell.engine.tokenizer.Tokenizer.TokenIterator;
-import org.apache.commons.math.linear.OpenMapRealVector;
-import org.apache.commons.math.linear.RealVector;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashSet;
 
 /**
  * Author: GuoYu
@@ -29,16 +29,16 @@ public class IDFTermFequency implements TermFequency {
 	}
 
     @Override
-    public RealVector parse(Reader reader, DimensionMapper mapper) throws IOException {
+    public Vector parse(Reader reader, DimensionMapper mapper) throws IOException {
     	Handler handler = handlerFactory.getHandler();
-        TreeMap<Dimension, Double> temp = new TreeMap<Dimension, Double>();
+    	SparseVector vector = new SparseVector();
         HashSet<String> terms = new HashSet<String>();
     	//increate document count;
         handler.increaseDocument();
     	for(TokenIterator i = tokenizer.iterator(reader);
     			i.next();) {
     		String term = i.token().text();
-            addFequency(temp, term, mapper);
+            addFequency(vector, term, mapper);
             terms.add(term);
     	}
         reduceByIDF(temp, terms, handler, mapper);
@@ -50,19 +50,15 @@ public class IDFTermFequency implements TermFequency {
     }
 
     @Override
-    public RealVector parse(String src, DimensionMapper mapper) throws IOException {
+    public Vector parse(String src, DimensionMapper mapper) throws IOException {
         return parse(new StringReader(src), mapper);
     }
 
-    private void addFequency(TreeMap<Dimension, Double> temp, String term, DimensionMapper mapper) {
+    private void addFequency(SparseVector vector, String term, DimensionMapper mapper) {
         int index = mapper.indexOf(term);
         Dimension dimension = new Dimension(index, term);
-        Double score = temp.get(dimension);
-        if(score == null) {
-            temp.put(dimension, 1d);
-        } else {
-            temp.put(dimension, score + 1d);
-        }
+        double score = vector.getValue(index);
+        vector.setValue(index, score + 1.0d);
     }
     
     private void reduceByIDF(TreeMap<Dimension, Double> temp, HashSet<String> terms, Handler handler, DimensionMapper mapper){
@@ -79,9 +75,9 @@ public class IDFTermFequency implements TermFequency {
     	}
     }
 
-    private RealVector toVector(TreeMap<Dimension, Double> temp) {
+    private Vector toVector(TreeMap<Dimension, Double> temp) {
         if(temp.size() == 0) {
-            return new OpenMapRealVector(0);
+            return new SparseVector();
         }
         Dimension maxDimension = temp.lastKey();
         OpenMapRealVector vector = new OpenMapRealVector(maxDimension.index + 1);

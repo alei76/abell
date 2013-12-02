@@ -2,9 +2,7 @@ package abell.engine.cluster;
 
 import java.util.Collection;
 
-import org.apache.commons.math.linear.RealVector;
-
-import abell.engine.Vector;
+import abell.engine.model.Vector;
 
 public class CanopyClusterer<V extends Vector> implements Clusterer<V>{
 
@@ -16,7 +14,7 @@ public class CanopyClusterer<V extends Vector> implements Clusterer<V>{
 	private static class Canopy<V> implements Clusterer.Clustor<V> {
 
 		@Override
-		public RealVector centre() {
+		public Vector centre() {
 			// TODO Auto-generated method stub
 			return null;
 		}

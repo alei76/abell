@@ -1,9 +1,9 @@
 package abell.engine.tf;
 
-import org.apache.commons.math.linear.RealVector;
-
 import java.io.IOException;
 import java.io.Reader;
+
+import abell.engine.model.Vector;
 
 /**
  * Author: GuoYu
@@ -11,8 +11,8 @@ import java.io.Reader;
  */
 public interface TermFequency {
 
-    RealVector parse(Reader reader, DimensionMapper mapper) throws IOException ;
+    Vector parse(Reader reader, DimensionMapper mapper) throws IOException ;
 
-    RealVector parse(String src, DimensionMapper mapper) throws IOException ;
+    Vector parse(String src, DimensionMapper mapper) throws IOException ;
 
 }
