@@ -1,4 +1,4 @@
-package abell.engine.tokenizer;
+package abell.engine.test.tokenizer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +14,9 @@ import abell.engine.tokenizer.Tokenizer.TokenIterator;
 
 public class LuceneBasedTokenizerTest {
 	
-	Tokenizer tokenizer;
+	private Tokenizer tokenizer;
 	
-	static String RESOURCE = "abell/engine/tokenizer/sample_chinese.dat";
+	private static String RESOURCE = "abell/engine/tokenizer/sample_chinese.dat";
 	
 	@Before
 	public void setUp() {

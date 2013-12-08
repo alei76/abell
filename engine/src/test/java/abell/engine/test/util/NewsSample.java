@@ -1,28 +1,15 @@
-package abell.engine.sample;
+package abell.engine.test.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.List;
 
 public class NewsSample {
-	
-	static final Log log = LogFactory.getLog(NewsSample.class);
-	
-	static final XMLInputFactory FACTORY = XMLInputFactory.newFactory();
 
 	String title;
 	
@@ -44,10 +31,24 @@ public class NewsSample {
 
 	private static final String RESOURCE_NAME = "abell/engine/sample/news_tensite_xml.smarty.dat";
 	
-	public static Iterator<NewsSample> listAll() throws IOException{
+	public static Iterator<NewsSample> iterator() throws IOException{
 	    try {
 			InputStream inStream = NewsSample.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
 			return new NewsIterator(new InputStreamReader(inStream, "gb2312"));
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+	}
+	
+	public static List<NewsSample> list(int count) throws IOException{
+	    try {
+			InputStream inStream = NewsSample.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
+			Iterator<NewsSample> samples = new NewsIterator(new InputStreamReader(inStream, "gb2312"), count);
+			List<NewsSample> res = new ArrayList<NewsSample>(count);
+			while(samples.hasNext()) {
+				res.add(samples.next());
+			}
+			return res;
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
@@ -59,8 +60,17 @@ public class NewsSample {
 		
 		NewsSample next;
 		
+		int max;
+		
+		int cursor = -1;
+		
 		private NewsIterator(Reader reader){
+			this(reader, Integer.MAX_VALUE);
+		}
+		
+		private NewsIterator(Reader reader, int max){
 			this.reader = new BufferedReader(reader);
+			this.max = max;
 			fetchNext();
 		}
 		
@@ -86,6 +96,7 @@ public class NewsSample {
 					line = reader.readLine();
 				}
 				this.next = next;
+				cursor ++ ;
 			} catch (IOException e) {
 				e.printStackTrace();
 				next = null;
@@ -94,7 +105,7 @@ public class NewsSample {
 		
 		@Override
 		public boolean hasNext() {
-			return next != null;
+			return next != null && cursor < max;
 		}
 
 		@Override

@@ -2,12 +2,12 @@ package abell.engine.reduction;
 
 import java.util.Collection;
 
-import org.apache.commons.math.linear.RealVector;
+import abell.engine.model.Vector;
 
 public interface Reduction {
 	
-	public Collection<? extends RealVector> reduceAll(Collection<? extends RealVector> vector);
+	public Collection<? extends Vector> reduceAll(Collection<? extends Vector> vector);
 	
-	public RealVector reduce(RealVector vector);
+	public Vector reduce(Vector vector);
 
 }

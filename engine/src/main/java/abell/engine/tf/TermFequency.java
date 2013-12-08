@@ -11,8 +11,8 @@ import abell.engine.model.Vector;
  */
 public interface TermFequency {
 
-    Vector parse(Reader reader, DimensionMapper mapper) throws IOException ;
+    Vector parse(Reader reader) throws IOException ;
 
-    Vector parse(String src, DimensionMapper mapper) throws IOException ;
+    Vector parse(String src) throws IOException ;
 
 }
