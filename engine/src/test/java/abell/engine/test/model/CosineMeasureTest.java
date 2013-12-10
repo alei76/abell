@@ -37,8 +37,6 @@ public class CosineMeasureTest {
 
 	@Test
 	public void testParse() throws MalformedURLException, IOException {
-		System.out.println("Base sample: " + base.getNews().getTitle());
-		System.out.println(base + "\n");
 		calulate();
 		sort();
 		for(NewsVector vector : samples) {
