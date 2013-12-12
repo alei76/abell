@@ -1,6 +1,7 @@
 package abell.engine.cluster;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import abell.engine.model.Vector;
 
@@ -16,7 +17,14 @@ public class CanopyClusterer<V extends Vector> implements Clusterer<V>{
 	}
 	
 	@Override
-	public Collection<? extends Clustor<V>> cluster(Collection<V> items) {
+	public Collection<? extends Clustor<V>> cluster(Iterable<V> items) {
+		HashSet<Canopy<V>> clusters = new HashSet<Canopy<V>>();
+		for(V vector : items) {
+			if(clusters.isEmpty()) {
+				
+				continue;
+			}
+		}
 		return null;
 	}
 	
