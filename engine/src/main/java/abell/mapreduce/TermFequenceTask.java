@@ -85,7 +85,8 @@ public class TermFequenceTask implements Runnable {
     public static void main(String[] args) {
         Configuration conf = new Configuration();
         TermFequenceTask task = new TermFequenceTask(conf);
-        conf.set("mapred.job.tracker", "aliyun-s1:9000");
+        conf.set("mapred.job.tracker", "aliyun-s1:9001");
+        conf.set("hadoop.job.ugi", "hadoop,superuser");
         task.run();
     }
 

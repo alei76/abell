@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class NewsSample {
+	
+	String id;
 
 	String title;
 	
@@ -27,6 +29,10 @@ public class NewsSample {
 
 	public String getUrl() {
 		return url;
+	}
+	
+	public String getId() {
+		return id;
 	}
 
 	private static final String RESOURCE_NAME = "abell/engine/sample/news_tensite_xml.smarty.dat";
@@ -83,6 +89,9 @@ public class NewsSample {
 						next = new NewsSample();
 					}else if("</doc>".equals(line)) {
 						break;
+					}else if(line.startsWith("<docno>") && next != null) {
+						next.id = line.substring(
+								"<docno>".length(), line.lastIndexOf("</docno>"));
 					}else if(line.startsWith("<contenttitle>") && next != null) {
 						next.title = line.substring(
 							"<contenttitle>".length(), line.lastIndexOf("</contenttitle>"));
