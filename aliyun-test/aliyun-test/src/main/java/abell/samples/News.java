@@ -1,15 +1,22 @@
-package abell.engine.test.util;
+package abell.samples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class NewsSample {
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+
+import abell.conf.Paths;
+import abell.item.LuceneBasedHandler;
+
+public class News {
 	
 	String id;
 
@@ -35,22 +42,22 @@ public class NewsSample {
 		return id;
 	}
 
-	private static final String RESOURCE_NAME = "abell/engine/sample/news_tensite_xml.smarty.dat";
+	private static final String RESOURCE_NAME = "abell/samples/news_tensite_xml.smarty.dat";
 	
-	public static Iterator<NewsSample> iterator() throws IOException{
+	public static Iterator<News> iterator() throws IOException{
 	    try {
-			InputStream inStream = NewsSample.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
+			InputStream inStream = News.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
 			return new NewsIterator(new InputStreamReader(inStream, "gb2312"));
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}
 	
-	public static List<NewsSample> list(int count) throws IOException{
+	public static List<News> list(int count) throws IOException{
 	    try {
-			InputStream inStream = NewsSample.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
-			Iterator<NewsSample> samples = new NewsIterator(new InputStreamReader(inStream, "gb2312"), count);
-			List<NewsSample> res = new ArrayList<NewsSample>(count);
+			InputStream inStream = News.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
+			Iterator<News> samples = new NewsIterator(new InputStreamReader(inStream, "gb2312"), count);
+			List<News> res = new ArrayList<News>(count);
 			while(samples.hasNext()) {
 				res.add(samples.next());
 			}
@@ -60,11 +67,11 @@ public class NewsSample {
 		}
 	}
 	
-	private static class NewsIterator implements Iterator<NewsSample>{
+	private static class NewsIterator implements Iterator<News>{
 
 		BufferedReader reader;
 		
-		NewsSample next;
+		News next;
 		
 		int max;
 		
@@ -82,11 +89,11 @@ public class NewsSample {
 		
 		private void fetchNext(){
 			try {
-				NewsSample next = null;
+				News next = null;
 				String line = reader.readLine();
 				while(line != null){
 					if("<doc>".equals(line)) {
-						next = new NewsSample();
+						next = new News();
 					}else if("</doc>".equals(line)) {
 						break;
 					}else if(line.startsWith("<docno>") && next != null) {
@@ -118,8 +125,8 @@ public class NewsSample {
 		}
 
 		@Override
-		public NewsSample next() {
-			NewsSample value = next;
+		public News next() {
+			News value = next;
 			fetchNext();
 			return value;
 		}
@@ -127,6 +134,16 @@ public class NewsSample {
 		@Override
 		public void remove() {}
 		
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Configuration conf = new Configuration();
+		LuceneBasedHandler handler = new LuceneBasedHandler(conf);
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(Paths.ITEMS, true);
+		for(News news : list(200)) {
+			handler.push(news.getId(), new StringReader(news.getContent()));
+		}
 	}
 	
 }

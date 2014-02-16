@@ -7,7 +7,6 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -20,7 +19,7 @@ public class LuceneBasedHandler extends ItemHandler {
 	private Analyzer analyzer;
 	private String FIELD_NAME = "abell.item";
 	
-	protected LuceneBasedHandler(Configuration conf) {
+	public LuceneBasedHandler(Configuration conf) {
 		super(conf);
 		analyzer = new SmartChineseAnalyzer(Version.LUCENE_45);
 	}

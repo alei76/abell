@@ -9,21 +9,32 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import abell.Param;
+import abell.conf.Paths;
 
 public abstract class ItemHandler {
 	
-	private static final Path BASE_PATH = new Path(Param.PATH_ITEMS);
+	private static final int DEFAULT_PAGE_SIZE = 1000;
 	
 	private String spliter;
 	
 	private Configuration conf;
 	
+	private FSDataOutputStream outStream;
+	
 	private FileSystem fs;
 	
-	protected ItemHandler(Configuration conf) {
+	private int pageSize, offset, page;
+	
+	protected ItemHandler(Configuration conf, int pageSize) {
 		this.conf = conf;
+		this.pageSize = pageSize;
 		spliter = conf.get("mapreduce.input.keyvaluelinerecordreader.key.value.separator");
+		offset = 0;
+		page = 0;
+	}
+	
+	protected ItemHandler(Configuration conf) {
+		this(conf, DEFAULT_PAGE_SIZE);
 	}
 	
 	public void push(String id, Reader reader) throws IOException{
@@ -31,24 +42,52 @@ public abstract class ItemHandler {
 		push(id, iterator(id, reader));
 	}
 	
+	public void close() {
+		if (outStream != null) {
+			try {
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	protected abstract Iterator<String> iterator(String id, Reader reader) throws IOException;
 	
 	private void push(String id, Iterator<String> itr) throws IOException{
-		FSDataOutputStream outStream;
-		Path path = new Path(BASE_PATH, id);
-		if (fs.exists(path) ) {
+		StringBuffer line;
+		nextOutput();
+		Path path = new Path(Paths.ITEMS, "page-" + page);
+		if (!fs.exists(path)) {
 			return;
 		} 
-		outStream = fs.create(path);
-		outStream.writeChars(id);
-		outStream.writeChars(spliter);
+		line = new StringBuffer(id);
+		line.append(spliter);
 		while (itr.hasNext()) {
 			String term = itr.next();
-			outStream.writeChars(term);
+			line.append(term);
 			if (itr.hasNext())
-				outStream.writeChar(' ');
+				line.append(' ');
 		}
-		outStream.close();
+		line.append("\n");
+		outStream.write(line.toString().getBytes());
+	}
+	
+	private void nextOutput() throws IOException {
+		if (offset == pageSize) {
+			offset = -1;
+			page++;
+			if (outStream != null) {
+				outStream.close();
+			}
+			outStream = null;
+		} else {
+			offset ++;
+		}
+		if (outStream == null) {
+			Path path = new Path(Paths.ITEMS, "page-" + page);
+			outStream = fs.create(path);
+		}
 	}
 	
 	private synchronized void ensureFileSystem() throws IOException{
