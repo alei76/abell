@@ -37,7 +37,7 @@ public abstract class ItemHandler {
 		this(conf, DEFAULT_PAGE_SIZE);
 	}
 	
-	public void push(String id, Reader reader) throws IOException{
+	public void append(String id, Reader reader) throws IOException{
 		ensureFileSystem();
 		push(id, iterator(id, reader));
 	}
@@ -70,7 +70,7 @@ public abstract class ItemHandler {
 				line.append(' ');
 		}
 		line.append("\n");
-		outStream.write(line.toString().getBytes());
+        outStream.write(line.toString().getBytes("utf8"));
 	}
 	
 	private void nextOutput() throws IOException {

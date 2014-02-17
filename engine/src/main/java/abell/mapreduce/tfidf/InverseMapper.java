@@ -10,10 +10,6 @@ public class InverseMapper extends Mapper<Text, Text, Text, Text> {
 	@Override
 	protected void map(Text key, Text value, Context context)
 			throws IOException, InterruptedException {
-		if (key.equals(TermFequenceReducer.KEY_ALL)) {
-			context.write(key, value);
-			return;
-		}
 		String[] split = key.toString().split("@");
 		String word = split[0];
 		String itemId = split[1];
