@@ -3,7 +3,6 @@ package abell.mapreduce.normalize;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import org.apache.commons.math.linear.SparseFieldVector;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.mahout.math.RandomAccessSparseVector;
