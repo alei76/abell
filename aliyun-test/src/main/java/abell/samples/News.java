@@ -145,7 +145,7 @@ public class News {
 		Configuration conf = new Configuration();
 		LuceneBasedHandler handler = new LuceneBasedHandler(conf);
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(Paths.ITEMS, true);
+		fs.delete(Paths.ITEMS_ORIGIN, true);
 		for(News news : list()) {
             if (news.getContent().length() < 10) {
                 continue;

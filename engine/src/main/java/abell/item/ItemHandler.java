@@ -24,6 +24,8 @@ public abstract class ItemHandler {
 	private FileSystem fs;
 	
 	private int pageSize, offset, page;
+
+    private Path target;
 	
 	protected ItemHandler(Configuration conf, int pageSize) {
 		this.conf = conf;
@@ -31,6 +33,7 @@ public abstract class ItemHandler {
 		spliter = conf.get("mapreduce.input.keyvaluelinerecordreader.key.value.separator");
 		offset = 0;
 		page = 0;
+        target = new Path(Paths.ITEMS_ORIGIN, "origin_all");
 	}
 	
 	protected ItemHandler(Configuration conf) {
@@ -56,11 +59,9 @@ public abstract class ItemHandler {
 	
 	private void push(String id, Iterator<String> itr) throws IOException{
 		StringBuffer line;
-		nextOutput();
-		Path path = new Path(Paths.ITEMS, "page-" + page);
-		if (!fs.exists(path)) {
-			return;
-		} 
+        if (outStream == null) {
+            outStream = fs.create(target);
+        }
 		line = new StringBuffer(id);
 		line.append(spliter);
 		while (itr.hasNext()) {
@@ -71,23 +72,6 @@ public abstract class ItemHandler {
 		}
 		line.append("\n");
         outStream.write(line.toString().getBytes("utf8"));
-	}
-	
-	private void nextOutput() throws IOException {
-		if (offset == pageSize) {
-			offset = -1;
-			page++;
-			if (outStream != null) {
-				outStream.close();
-			}
-			outStream = null;
-		} else {
-			offset ++;
-		}
-		if (outStream == null) {
-			Path path = new Path(Paths.ITEMS, "page-" + page);
-			outStream = fs.create(path);
-		}
 	}
 	
 	private synchronized void ensureFileSystem() throws IOException{

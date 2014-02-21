@@ -4,14 +4,14 @@ import org.apache.hadoop.fs.Path;
 
 public interface Paths {
 
-	Path ITEMS = new Path("/abell/items");
-    Path DICTIONARY = new Path("/abell/dict");
-    Path MATRIX = new Path("/abell/matrix");
-    Path MATRIX_ITEMS = new Path(MATRIX, "items");
+    Path ITEMS = new Path("/abell/items");
+    Path ITEMS_ORIGIN = new Path(ITEMS, "origin");
+    Path ITEMS_SEQUENCE = new Path(ITEMS, "sequence");
+    Path ITEMS_VECTOR = new Path(ITEMS, "vector");
 
-	Path TF_IDF = new Path("/abell/tfidf");
-	Path TF_IDF_STEP1 = new Path(TF_IDF, "step1");
-    Path TF_IDF_STEP2 = new Path(TF_IDF, "step2");
-    Path TF_IDF_RESULT = new Path(TF_IDF, "result");
+    Path MODEL = new Path("/abell/model");
+    Path MODEL_DICT = new Path(MODEL, "dict");
+    Path MODEL_LDA = new Path(MODEL, "lda");
+    Path MODEL_TOPIC = new Path(MODEL, "topic");
 	
 }

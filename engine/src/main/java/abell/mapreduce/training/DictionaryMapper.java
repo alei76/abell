@@ -1,4 +1,4 @@
-package abell.mapreduce.normalize;
+package abell.mapreduce.training;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;

@@ -9,10 +9,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 
 import abell.conf.Paths;
 
@@ -58,16 +55,15 @@ public class Dictionary extends java.util.Dictionary<Integer, String>{
 		reverseMap.remove(get(key));
 		return innerMap.remove(key);
 	}
-	
-	public int indexOf(String word) {
-		Integer index = reverseMap.get(word);
-		return index != null ? index.intValue() : -1;
-	}
+
+    public int indexOf(String word) {
+        return reverseMap.get(word);
+    }
 	
 	public static Dictionary read(Configuration conf, Path path) throws IOException {
 		FileSystem fs = FileSystem.get(conf);
-		FileStatus[] ss = fs.listStatus(Paths.DICTIONARY);
-		Dictionary dict = new Dictionary();
+		FileStatus[] ss = fs.listStatus(Paths.MODEL_DICT, filter);
+        Dictionary dict = new Dictionary();
 		for(FileStatus status : ss) {
 			Path thisPath = status.getPath();
 			if (path.getName().startsWith("_")) {
@@ -111,11 +107,20 @@ public class Dictionary extends java.util.Dictionary<Integer, String>{
 			return iterator.next();
 		}
 	}
+
+    private static PathFilter filter = new PathFilter() {
+
+        @Override
+        public boolean accept(Path path) {
+            return path.getName().startsWith("part-");
+        }
+
+    };
 	
 	public static void main(String[] args) throws IOException {
 		Configuration conf = new Configuration();
 		conf.set("fs.default.name", "hdfs://aliyun-s1:9000");
-		Dictionary dict = read(new Configuration(), Paths.DICTIONARY);
+		Dictionary dict = read(new Configuration(), Paths.MODEL_DICT);
 		System.out.println(dict);
 	}
 
