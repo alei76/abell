@@ -9,8 +9,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
 
-import abell.conf.Paths;
-import abell.mapreduce.util.Dictionary;
+import abell.mapreduce.common.Dictionary;
 
 public class VectoringMapper extends Mapper<Text, Text, Text, VectorWritable> {
 
@@ -19,7 +18,7 @@ public class VectoringMapper extends Mapper<Text, Text, Text, VectorWritable> {
 	@Override
 	protected void setup(Context context)
 			throws IOException, InterruptedException {
-		dict = Dictionary.read(context.getConfiguration(), Paths.MODEL_DICT);
+		dict = Dictionary.read(context.getConfiguration());
 	}
 	
 	@Override

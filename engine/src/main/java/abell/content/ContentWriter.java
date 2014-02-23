@@ -1,4 +1,4 @@
-package abell.item;
+package abell.content;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -11,9 +11,7 @@ import org.apache.hadoop.fs.Path;
 
 import abell.conf.Paths;
 
-public abstract class ItemHandler {
-	
-	private static final int DEFAULT_PAGE_SIZE = 1000;
+public abstract class ContentWriter {
 	
 	private String spliter;
 	
@@ -22,22 +20,13 @@ public abstract class ItemHandler {
 	private FSDataOutputStream outStream;
 	
 	private FileSystem fs;
-	
-	private int pageSize, offset, page;
 
     private Path target;
 	
-	protected ItemHandler(Configuration conf, int pageSize) {
+	protected ContentWriter(Configuration conf) {
 		this.conf = conf;
-		this.pageSize = pageSize;
 		spliter = conf.get("mapreduce.input.keyvaluelinerecordreader.key.value.separator");
-		offset = 0;
-		page = 0;
         target = new Path(Paths.ITEMS_ORIGIN, "origin_all");
-	}
-	
-	protected ItemHandler(Configuration conf) {
-		this(conf, DEFAULT_PAGE_SIZE);
 	}
 	
 	public void append(String id, Reader reader) throws IOException{
@@ -45,13 +34,25 @@ public abstract class ItemHandler {
 		push(id, iterator(id, reader));
 	}
 	
+	public void flush() {
+		if (outStream == null) {
+			return;
+		}	
+		try {
+			outStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void close() {
-		if (outStream != null) {
-			try {
-				outStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (outStream == null) {
+			return;
+		}	
+		try {
+			outStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

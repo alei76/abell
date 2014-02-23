@@ -1,6 +1,8 @@
 package abell.samples;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,7 +16,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 
 import abell.conf.Paths;
-import abell.item.LuceneBasedHandler;
 
 public class News {
 	
@@ -42,11 +43,11 @@ public class News {
 		return id;
 	}
 
-	private static final String RESOURCE_NAME = "news_gbk.txt";
+	private static final String Path = "E:\\data\\sohunews";
 	
-	public static List<News> list() throws IOException{
+	public static List<News> list(File file) throws IOException{
         try {
-            InputStream inStream = News.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
+            InputStream inStream = new FileInputStream(file);
             Iterator<News> samples = new NewsIterator(new InputStreamReader(inStream, "gbk"));
             List<News> res = new ArrayList<News>();
             while(samples.hasNext()) {
@@ -56,20 +57,6 @@ public class News {
         } catch (Exception e) {
             throw new IOException(e);
         }
-	}
-	
-	public static List<News> list(int count) throws IOException{
-	    try {
-			InputStream inStream = News.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
-			Iterator<News> samples = new NewsIterator(new InputStreamReader(inStream, "gbk"), count);
-			List<News> res = new ArrayList<News>(count);
-			while(samples.hasNext()) {
-				res.add(samples.next());
-			}
-			return res;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
 	}
 	
 	private static class NewsIterator implements Iterator<News>{
@@ -141,18 +128,31 @@ public class News {
 		
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		LuceneBasedHandler handler = new LuceneBasedHandler(conf);
+		LuceneBasedWriter handler = new LuceneBasedWriter(conf);
 		FileSystem fs = FileSystem.get(conf);
 		fs.delete(Paths.ITEMS_ORIGIN, true);
-		for(News news : list()) {
+		File folder = new File(Path);
+		int count = 0;
+		for(File file : folder.listFiles()) {
+			if (count ++ >= 1) {
+				break;
+			}
+			appendFile(file, handler);
+		}
+        handler.close();
+	}
+	
+	private static void appendFile(File file, LuceneBasedWriter handler) throws IOException {
+		System.out.println("Appending file " + file.getName());
+		for(News news : list(file)) {
             if (news.getContent().length() < 10) {
                 continue;
             }
 			handler.append(news.getId(), new StringReader(news.getContent()));
 		}
-        handler.close();
+		handler.flush();
 	}
 	
 }

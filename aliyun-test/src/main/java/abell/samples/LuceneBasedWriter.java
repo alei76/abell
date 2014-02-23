@@ -1,4 +1,4 @@
-package abell.item;
+package abell.samples;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,19 +9,21 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Version;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
-public class LuceneBasedHandler extends ItemHandler {
+import abell.content.ContentWriter;
 
-	private static Log LOG = LogFactory.getLog(LuceneBasedHandler.class);
+public class LuceneBasedWriter extends ContentWriter {
+
+	private static Log LOG = LogFactory.getLog(LuceneBasedWriter.class);
+	
 	private Analyzer analyzer;
 	private String FIELD_NAME = "abell.item";
 	
-	public LuceneBasedHandler(Configuration conf) {
+	public LuceneBasedWriter(Configuration conf) {
 		super(conf);
-		analyzer = new SmartChineseAnalyzer(Version.LUCENE_45);
+		analyzer = new IKAnalyzer(true);
 	}
 
 	@Override
