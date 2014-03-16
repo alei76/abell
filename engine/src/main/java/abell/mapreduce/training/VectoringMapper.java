@@ -9,7 +9,7 @@ import org.apache.mahout.math.RandomAccessSparseVector;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
 
-import abell.mapreduce.common.Dictionary;
+import abell.mapreduce.model.Dictionary;
 
 public class VectoringMapper extends Mapper<Text, Text, Text, VectorWritable> {
 

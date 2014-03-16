@@ -14,7 +14,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import abell.conf.Paths;
-import abell.mapreduce.common.ScoredWordWritable;
+import abell.mapreduce.model.ScoredWordWritable;
 
 public class TopicModelingDriver extends Configured implements Tool {
 

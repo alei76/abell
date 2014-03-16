@@ -21,8 +21,8 @@ public class LuceneBasedWriter extends ContentWriter {
 	private Analyzer analyzer;
 	private String FIELD_NAME = "abell.item";
 	
-	public LuceneBasedWriter(Configuration conf) {
-		super(conf);
+	public LuceneBasedWriter(Configuration conf, String name) {
+		super(conf, name);
 		analyzer = new IKAnalyzer(true);
 	}
 

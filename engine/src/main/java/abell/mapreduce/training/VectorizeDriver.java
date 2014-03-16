@@ -13,7 +13,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.mahout.math.VectorWritable;
 
 import abell.conf.Paths;
-import abell.mapreduce.TrainingDriver;
+import abell.driver.TopicTrainingDriver;
 
 public class VectorizeDriver extends Configured implements Tool {
 	
@@ -28,7 +28,7 @@ public class VectorizeDriver extends Configured implements Tool {
         vectoringJob.setOutputKeyClass(Text.class);
         vectoringJob.setOutputValueClass(VectorWritable.class);
 
-        vectoringJob.setJarByClass(TrainingDriver.class);
+        vectoringJob.setJarByClass(TopicTrainingDriver.class);
         vectoringJob.setInputFormatClass(KeyValueTextInputFormat.class);
         vectoringJob.setOutputFormatClass(SequenceFileOutputFormat.class);
         FileInputFormat.setInputPaths(vectoringJob, Paths.ITEMS_ORIGIN);

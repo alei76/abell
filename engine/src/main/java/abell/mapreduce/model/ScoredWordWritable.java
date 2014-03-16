@@ -1,4 +1,4 @@
-package abell.mapreduce.common;
+package abell.mapreduce.model;
 
 import java.io.DataInput;
 import java.io.DataOutput;

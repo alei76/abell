@@ -23,10 +23,10 @@ public abstract class ContentWriter {
 
     private Path target;
 	
-	protected ContentWriter(Configuration conf) {
+	protected ContentWriter(Configuration conf, String name) {
 		this.conf = conf;
 		spliter = conf.get("mapreduce.input.keyvaluelinerecordreader.key.value.separator");
-        target = new Path(Paths.ITEMS_ORIGIN, "origin_all");
+        target = new Path(Paths.ITEMS_ORIGIN, name);
 	}
 	
 	public void append(String id, Reader reader) throws IOException{

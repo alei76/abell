@@ -12,7 +12,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import abell.conf.Paths;
-import abell.mapreduce.TrainingDriver;
+import abell.driver.TopicTrainingDriver;
 
 public class DictionaryDriver extends Configured implements Tool {
 	
@@ -28,7 +28,7 @@ public class DictionaryDriver extends Configured implements Tool {
         dictJob.setOutputKeyClass(IntWritable.class);
         dictJob.setOutputValueClass(Text.class);
 
-        dictJob.setJarByClass(TrainingDriver.class);
+        dictJob.setJarByClass(TopicTrainingDriver.class);
         dictJob.setInputFormatClass(KeyValueTextInputFormat.class);
         FileInputFormat.setInputPaths(dictJob, Paths.ITEMS_ORIGIN);
         FileOutputFormat.setOutputPath(dictJob, Paths.MODEL_DICT);

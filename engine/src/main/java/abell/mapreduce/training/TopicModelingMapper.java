@@ -8,7 +8,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import abell.mapreduce.common.ScoredWordWritable;
+import abell.mapreduce.model.ScoredWordWritable;
 
 /**
  * Author: GuoYu

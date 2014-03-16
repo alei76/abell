@@ -1,4 +1,4 @@
-package abell.mapreduce.common;
+package abell.mapreduce.model;
 
 import java.util.HashMap;
 import java.util.Map;

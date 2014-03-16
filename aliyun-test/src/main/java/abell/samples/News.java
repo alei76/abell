@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -128,30 +131,46 @@ public class News {
 		
 	}
 	
+	private static final int FILE_LIMIT = 5;
+	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		LuceneBasedWriter handler = new LuceneBasedWriter(conf);
-		FileSystem fs = FileSystem.get(conf);
-		fs.delete(Paths.ITEMS_ORIGIN, true);
+		clear(conf);
 		File folder = new File(Path);
-		int count = 0;
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2000);
+		cal.set(Calendar.MONTH, 0);
+		cal.set(Calendar.DAY_OF_MONTH, 0);
+		LuceneBasedWriter handler = new LuceneBasedWriter(conf, "news-samples-all");
+		int i = 0;
 		for(File file : folder.listFiles()) {
-			if (count ++ >= 1) {
+			appendFile(file, cal, handler);
+			i ++ ;
+			if (i == FILE_LIMIT) {
 				break;
 			}
-			appendFile(file, handler);
 		}
         handler.close();
 	}
 	
-	private static void appendFile(File file, LuceneBasedWriter handler) throws IOException {
-		System.out.println("Appending file " + file.getName());
+	private static void clear(Configuration conf) throws IOException {
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(Paths.ITEMS_ORIGIN, true);
+	}
+	
+	private static void appendFile(File file, Calendar cal, LuceneBasedWriter handler)
+			throws IOException {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		for(News news : list(file)) {
             if (news.getContent().length() < 10) {
                 continue;
             }
-			handler.append(news.getId(), new StringReader(news.getContent()));
+    		String suffix = format.format(cal.getTime());
+			handler.append(news.getId() + "/" + suffix,
+				new StringReader(news.getContent()));
+			cal.add(Calendar.HOUR_OF_DAY, 3);
 		}
+		System.out.println(file.getName() + " finished.");
 		handler.flush();
 	}
 	

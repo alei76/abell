@@ -1,4 +1,4 @@
-package abell.mapreduce;
+package abell.driver;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -13,7 +13,7 @@ import abell.mapreduce.training.VectorizeDriver;
  * Author: GuoYu
  * Date: 14-2-20
  */
-public class TrainingDriver extends Configured implements Tool {
+public class TopicTrainingDriver extends Configured implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
@@ -25,6 +25,6 @@ public class TrainingDriver extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        ToolRunner.run(new TrainingDriver(), args);
+        ToolRunner.run(new TopicTrainingDriver(), args);
     }
 }
